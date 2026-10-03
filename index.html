@@ -1,0 +1,1539 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  ShoppingBag, 
+  Heart, 
+  Search, 
+  X, 
+  ChevronRight, 
+  ChevronLeft, 
+  Star, 
+  SlidersHorizontal, 
+  Check, 
+  Plus, 
+  Minus, 
+  Trash2, 
+  ArrowRight, 
+  ShieldCheck, 
+  Truck, 
+  RotateCcw, 
+  Instagram, 
+  Facebook, 
+  Twitter, 
+  Mail, 
+  Menu, 
+  Lock,
+  Sparkles,
+  Eye
+} from 'lucide-react';
+
+const PRODUCTS = [
+  {
+    id: 1,
+    name: 'Oversized Wool Blend Coat',
+    category: 'Outerwear',
+    gender: 'Women',
+    price: 285,
+    originalPrice: 340,
+    rating: 4.9,
+    reviewsCount: 48,
+    badge: 'Bestseller',
+    colors: [
+      { name: 'Oatmeal', hex: '#E2D7C5' },
+      { name: 'Obsidian', hex: '#1A1A1A' },
+      { name: 'Terracotta', hex: '#C85A32' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L'],
+    images: [
+      'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1548624149-f1af3492b8d4?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Sculptural silhouette tailored from an Italian wool blend with high lapels and deep side pockets. A modern classic engineered for effortless cold-weather layering.',
+    fabricCare: '70% Recycled Wool, 30% Polyamide. Dry clean only. Warm iron if needed.'
+  },
+  {
+    id: 2,
+    name: 'Minimalist Silk Satin Blouse',
+    category: 'Tops',
+    gender: 'Women',
+    price: 165,
+    rating: 4.8,
+    reviewsCount: 32,
+    badge: 'New',
+    colors: [
+      { name: 'Champagne', hex: '#F3E5AB' },
+      { name: 'Midnight Black', hex: '#111111' },
+      { name: 'Sage', hex: '#9CAF88' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L', 'XL'],
+    images: [
+      'https://images.unsplash.com/photo-1564257631407-4deb1f99d992?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1551803091-e20673f15770?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Crafted from heavy 19mm mulberry silk satin with a fluid drape and subtle luster. Features French seams and mother-of-pearl buttons.',
+    fabricCare: '100% Mulberry Silk. Hand wash cold with delicate detergent or dry clean.'
+  },
+  {
+    id: 3,
+    name: 'Relaxed Pleated Trousers',
+    category: 'Bottoms',
+    gender: 'Women',
+    price: 190,
+    rating: 4.7,
+    reviewsCount: 19,
+    badge: '',
+    colors: [
+      { name: 'Sand', hex: '#D2B48C' },
+      { name: 'Charcoal', hex: '#36454F' }
+    ],
+    sizes: ['S', 'M', 'L'],
+    images: [
+      'https://images.unsplash.com/photo-1509631179647-0177331693ae?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'High-waisted trousers with front double pleats for maximum fluid motion. Engineered in lightweight drape crease-resistant twill.',
+    fabricCare: '65% Viscose, 35% Recycled Polyester. Machine wash gentle cycle at 30°C.'
+  },
+  {
+    id: 4,
+    name: 'Structured Leather Crossbody',
+    category: 'Accessories',
+    gender: 'Unisex',
+    price: 240,
+    originalPrice: 290,
+    rating: 5.0,
+    reviewsCount: 61,
+    badge: 'Sale',
+    colors: [
+      { name: 'Espresso', hex: '#3B2F2F' },
+      { name: 'Black', hex: '#000000' }
+    ],
+    sizes: ['One Size'],
+    images: [
+      'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1590874103328-eac38a683ce7?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Architectural leather bag handcrafted with full-grain calfskin leather, custom matte brushed gold hardware, and suede lining.',
+    fabricCare: '100% Genuine Italian Calfskin. Wipe clean with soft damp cloth. Store in dust bag.'
+  },
+  {
+    id: 5,
+    name: 'Heavyweight Cotton Hoodie',
+    category: 'Tops',
+    gender: 'Men',
+    price: 140,
+    rating: 4.8,
+    reviewsCount: 53,
+    badge: 'Bestseller',
+    colors: [
+      { name: 'Slate Grey', hex: '#708090' },
+      { name: 'Cream', hex: '#FFFDD0' },
+      { name: 'Olive', hex: '#556B2F' }
+    ],
+    sizes: ['S', 'M', 'L', 'XL', 'XXL'],
+    images: [
+      'https://images.unsplash.com/photo-1556905055-8f358a7a47b2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1509967419530-da38b4704bc6?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Constructed from 480gsm organic french terry cotton. Ultra-dense weave featuring double-layered hood and boxy drop-shoulder cut.',
+    fabricCare: '100% Organic Cotton. Wash cold inside out. Hang dry to maintain shape.'
+  },
+  {
+    id: 6,
+    name: 'Tailored Linen Trench Coat',
+    category: 'Outerwear',
+    gender: 'Women',
+    price: 310,
+    rating: 4.9,
+    reviewsCount: 27,
+    badge: 'New',
+    colors: [
+      { name: 'Natural Linen', hex: '#D7C4B7' },
+      { name: 'Black', hex: '#111111' }
+    ],
+    sizes: ['XS', 'S', 'M', 'L'],
+    images: [
+      'https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Trans-seasonal statement trench crafted from heavyweight washed Belgian linen. Relaxed storm flap, double-breasted closure, and waist belt.',
+    fabricCare: '100% Belgian Linen. Dry clean or cold delicate wash.'
+  },
+  {
+    id: 7,
+    name: 'Chunky Knit Wool Sweater',
+    category: 'Tops',
+    gender: 'Unisex',
+    price: 210,
+    originalPrice: 250,
+    rating: 4.8,
+    reviewsCount: 39,
+    badge: 'Sale',
+    colors: [
+      { name: 'Ivory', hex: '#FFFFF0' },
+      { name: 'Camel', hex: '#C19A6B' }
+    ],
+    sizes: ['S', 'M', 'L', 'XL'],
+    images: [
+      'https://images.unsplash.com/photo-1576995853123-5a10305d93c0?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Thick rib-knit sweater constructed from 100% extrafine merino wool. Designed with a soft mock collar and comfortable ribbed cuffs.',
+    fabricCare: '100% Extrafine Merino Wool. Hand wash cold, lay flat to dry.'
+  },
+  {
+    id: 8,
+    name: 'Minimalist Leather Mule',
+    category: 'Accessories',
+    gender: 'Women',
+    price: 180,
+    rating: 4.6,
+    reviewsCount: 22,
+    badge: '',
+    colors: [
+      { name: 'Ecru', hex: '#F5F5DC' },
+      { name: 'Black', hex: '#1A1A1A' }
+    ],
+    sizes: ['36', '37', '38', '39', '40'],
+    images: [
+      'https://images.unsplash.com/photo-1543163521-1bf539c55dd2?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1535043934128-cf0b28d52f95?auto=format&fit=crop&w=800&q=80'
+    ],
+    description: 'Sleek square-toe slip-on mule featuring a padded leather footbed and 45mm sculpted block heel for effortless daily elegance.',
+    fabricCare: '100% Nappa Leather upper & lining. Protect with leather balm.'
+  }
+];
+
+const HERO_SLIDES = [
+  {
+    id: 1,
+    title: 'AUTUMN STATEMENT 2026',
+    subtitle: 'Sculpted silhouettes, warm tactile knits, and timeless minimalist outerwear.',
+    image: 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1800&q=80',
+    tag: 'NEW ARRIVALS'
+  },
+  {
+    id: 2,
+    title: 'THE MINIMALIST LUXE',
+    subtitle: 'Pure silk, organic heavyweight cottons, and architectural tailoring.',
+    image: 'https://images.unsplash.com/photo-1445205170230-053b83016050?auto=format&fit=crop&w=1800&q=80',
+    tag: 'CURATED CAPSULE'
+  },
+  {
+    id: 3,
+    title: 'MODERN ESSENTIALS',
+    subtitle: 'Refined everyday classics designed to transcend fast fashion trends.',
+    image: 'https://images.unsplash.com/photo-1469334031218-e382a71b716b?auto=format&fit=crop&w=1800&q=80',
+    tag: 'ESSENTIAL COLLECTION'
+  }
+];
+
+const CATEGORIES = [
+  {
+    id: 'Streetwear',
+    name: 'Urban Streetwear',
+    image: 'https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&w=800&q=80',
+    items: '42 Products'
+  },
+  {
+    id: 'Minimalist Luxe',
+    name: 'Minimalist Luxe',
+    image: 'https://images.unsplash.com/photo-1485230895905-ec40ba36b9bc?auto=format&fit=crop&w=800&q=80',
+    items: '28 Products'
+  },
+  {
+    id: 'Outerwear',
+    name: 'Outerwear',
+    image: 'https://images.unsplash.com/photo-1539533018447-63fcce2678e3?auto=format&fit=crop&w=800&q=80',
+    items: '35 Products'
+  },
+  {
+    id: 'Accessories',
+    name: 'Accessories & Leather',
+    image: 'https://images.unsplash.com/photo-1548036328-c9fa89d128fa?auto=format&fit=crop&w=800&q=80',
+    items: '19 Products'
+  }
+];
+
+export default function App() {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isWishlistOpen, setIsWishlistOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  
+  // Search state
+  const [searchQuery, setSearchQuery] = useState('');
+  
+  // Filtering & Sorting State
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedGender, setSelectedGender] = useState('All');
+  const [priceRange, setPriceRange] = useState(350);
+  const [sortBy, setSortBy] = useState('featured');
+
+  // Promo code state
+  const [promoCode, setPromoCode] = useState('');
+  const [discountPercent, setDiscountPercent] = useState(0);
+  const [promoError, setPromoError] = useState('');
+  const [promoSuccess, setPromoSuccess] = useState('');
+
+  // Notifications Toast
+  const [toast, setToast] = useState(null);
+
+  // Mobile navigation menu
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Checkout step state
+  const [checkoutStep, setCheckoutStep] = useState('shipping');
+  const [orderComplete, setOrderComplete] = useState(false);
+
+  useEffect(() => {
+    const slideInterval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(slideInterval);
+  }, []);
+
+  const showNotification = (message) => {
+    setToast(message);
+    setTimeout(() => {
+      setToast(null);
+    }, 3000);
+  };
+
+  const addToCart = (product, selectedColor, selectedSize) => {
+    const colorToUse = selectedColor || product.colors[0].name;
+    const sizeToUse = selectedSize || product.sizes[0];
+    const cartItemId = `${product.id}-${colorToUse}-${sizeToUse}`;
+
+    setCart((prevCart) => {
+      const existingItemIndex = prevCart.findIndex((item) => item.cartItemId === cartItemId);
+      if (existingItemIndex > -1) {
+        const updatedCart = [...prevCart];
+        updatedCart[existingItemIndex].quantity += 1;
+        return updatedCart;
+      } else {
+        return [
+          ...prevCart,
+          {
+            ...product,
+            cartItemId,
+            selectedColor: colorToUse,
+            selectedSize: sizeToUse,
+            quantity: 1
+          }
+        ];
+      }
+    });
+
+    showNotification(`Added "${product.name}" to cart`);
+  };
+
+  const updateCartQuantity = (cartItemId, delta) => {
+    setCart((prevCart) =>
+      prevCart
+        .map((item) => {
+          if (item.cartItemId === cartItemId) {
+            const newQty = item.quantity + delta;
+            return newQty > 0 ? { ...item, quantity: newQty } : null;
+          }
+          return item;
+        })
+        .filter(Boolean)
+    );
+  };
+
+  const removeFromCart = (cartItemId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.cartItemId !== cartItemId));
+    showNotification('Item removed from cart');
+  };
+
+  const toggleWishlist = (product) => {
+    setWishlist((prev) => {
+      const exists = prev.some((item) => item.id === product.id);
+      if (exists) {
+        showNotification(`Removed from Wishlist`);
+        return prev.filter((item) => item.id !== product.id);
+      } else {
+        showNotification(`Added to Wishlist`);
+        return [...prev, product];
+      }
+    });
+  };
+
+  const isWishlisted = (productId) => {
+    return wishlist.some((item) => item.id === productId);
+  };
+
+  const handleApplyPromo = (e) => {
+    e.preventDefault();
+    if (promoCode.trim().toUpperCase() === 'AURA10') {
+      setDiscountPercent(10);
+      setPromoSuccess('10% Discount applied!');
+      setPromoError('');
+    } else {
+      setPromoError('Invalid promo code. Try "AURA10"');
+      setPromoSuccess('');
+    }
+  };
+
+  const filteredProducts = useMemo(() => {
+    return PRODUCTS.filter((product) => {
+      // Category filter
+      if (selectedCategory !== 'All' && product.category !== selectedCategory) {
+        return false;
+      }
+      // Gender filter
+      if (selectedGender !== 'All' && product.gender !== selectedGender && product.gender !== 'Unisex') {
+        return false;
+      }
+      // Price filter
+      if (product.price > priceRange) {
+        return false;
+      }
+      return true;
+    }).sort((a, b) => {
+      if (sortBy === 'price-low') return a.price - b.price;
+      if (sortBy === 'price-high') return b.price - a.price;
+      if (sortBy === 'newest') return b.badge === 'New' ? 1 : -1;
+      return 0; // Default featured
+    });
+  }, [selectedCategory, selectedGender, priceRange, sortBy]);
+
+  const searchResults = useMemo(() => {
+    if (!searchQuery.trim()) return [];
+    return PRODUCTS.filter((p) =>
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.description.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+  }, [searchQuery]);
+
+  const cartSubtotal = useMemo(() => {
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
+  }, [cart]);
+
+  const discountAmount = (cartSubtotal * discountPercent) / 100;
+  const freeShippingThreshold = 250;
+  const shippingCost = cartSubtotal >= freeShippingThreshold || cartSubtotal === 0 ? 0 : 15;
+  const estimatedTax = (cartSubtotal - discountAmount) * 0.08;
+  const grandTotal = cartSubtotal - discountAmount + shippingCost + estimatedTax;
+
+  return (
+    <div className="min-h-screen bg-[#FDFBF7] text-[#1A1A1A] font-sans antialiased selection:bg-[#C85A32] selection:text-white">
+      {}
+      {toast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-[#1A1A1A] text-white px-5 py-3.5 rounded-lg shadow-2xl flex items-center space-x-3 transition-all duration-300 transform translate-y-0 animate-bounce">
+          <Sparkles className="w-5 h-5 text-[#C85A32]" />
+          <span className="text-sm font-medium tracking-wide">{toast}</span>
+        </div>
+      )}
+
+      {}
+      <div className="bg-[#1A1A1A] text-white text-xs py-2 px-4 text-center tracking-widest uppercase font-light flex justify-between items-center">
+        <div className="hidden sm:block opacity-0">Placeholder</div>
+        <div>
+          Complimentary Worldwide Shipping on orders over $250 — Use code <span className="font-semibold text-[#C85A32]">AURA10</span> for 10% OFF
+        </div>
+        <div className="hidden sm:flex items-center space-x-4 text-gray-300">
+          <span>USD $</span>
+          <span>Help</span>
+        </div>
+      </div>
+
+      {}
+      <header className="sticky top-0 z-40 bg-[#FDFBF7]/90 backdrop-blur-md border-b border-stone-200 transition-all duration-300">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+          
+          {/* Mobile Menu Toggle Button */}
+          <button 
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 text-stone-700 hover:text-black focus:outline-none"
+            aria-label="Toggle menu"
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
+          {/* Logo */}
+          <div className="flex items-center">
+            <a href="#" className="text-2xl sm:text-3xl font-serif tracking-widest font-extrabold uppercase text-[#1A1A1A]">
+              AURA<span className="font-light text-[#C85A32] ml-1">STUDIO</span>
+            </a>
+          </div>
+
+          {/* Desktop Navigation Links */}
+          <nav className="hidden lg:flex items-center space-x-8 text-sm font-medium tracking-wider uppercase text-stone-700">
+            <button onClick={() => { setSelectedCategory('All'); setSelectedGender('All'); }} className="hover:text-[#C85A32] transition-colors">
+              New Arrivals
+            </button>
+            <button onClick={() => { setSelectedGender('Women'); setSelectedCategory('All'); }} className="hover:text-[#C85A32] transition-colors">
+              Women
+            </button>
+            <button onClick={() => { setSelectedGender('Men'); setSelectedCategory('All'); }} className="hover:text-[#C85A32] transition-colors">
+              Men
+            </button>
+            <button onClick={() => { setSelectedCategory('Accessories'); setSelectedGender('All'); }} className="hover:text-[#C85A32] transition-colors">
+              Accessories
+            </button>
+            <button onClick={() => { setSelectedCategory('All'); setSortBy('price-low'); }} className="text-[#C85A32] font-semibold hover:opacity-80 transition-opacity">
+              Sale
+            </button>
+          </nav>
+
+          {/* Header Action Icons */}
+          <div className="flex items-center space-x-4 sm:space-x-6">
+            <button 
+              onClick={() => setIsSearchOpen(true)}
+              className="p-2 text-stone-700 hover:text-[#C85A32] transition-colors"
+              aria-label="Search"
+            >
+              <Search className="w-5 h-5" />
+            </button>
+
+            {/* Wishlist Icon Button with Badge */}
+            <button 
+              onClick={() => setIsWishlistOpen(true)}
+              className="p-2 text-stone-700 hover:text-[#C85A32] transition-colors relative"
+              aria-label="Wishlist"
+            >
+              <Heart className="w-5 h-5" />
+              {wishlist.length > 0 && (
+                <span className="absolute top-1 right-1 bg-[#C85A32] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {wishlist.length}
+                </span>
+              )}
+            </button>
+
+            {/* Cart Icon Button with Badge */}
+            <button 
+              onClick={() => setIsCartOpen(true)}
+              className="p-2 text-stone-700 hover:text-[#C85A32] transition-colors relative"
+              aria-label="Cart"
+            >
+              <ShoppingBag className="w-5 h-5" />
+              {cart.reduce((acc, item) => acc + item.quantity, 0) > 0 && (
+                <span className="absolute top-1 right-1 bg-[#1A1A1A] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center font-bold">
+                  {cart.reduce((acc, item) => acc + item.quantity, 0)}
+                </span>
+              )}
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Navigation Drawer Dropdown */}
+        {mobileMenuOpen && (
+          <div className="lg:hidden border-t border-stone-200 bg-[#FDFBF7] px-6 py-6 space-y-4 text-sm font-medium tracking-wider uppercase">
+            <div className="flex justify-between items-center pb-2 border-b border-stone-200">
+              <span className="font-bold text-stone-400 text-xs">Categories</span>
+              <button onClick={() => setMobileMenuOpen(false)}><X className="w-5 h-5" /></button>
+            </div>
+            <button 
+              onClick={() => { setSelectedCategory('All'); setSelectedGender('All'); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#C85A32]"
+            >
+              All Collections
+            </button>
+            <button 
+              onClick={() => { setSelectedGender('Women'); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#C85A32]"
+            >
+              Women
+            </button>
+            <button 
+              onClick={() => { setSelectedGender('Men'); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#C85A32]"
+            >
+              Men
+            </button>
+            <button 
+              onClick={() => { setSelectedCategory('Accessories'); setMobileMenuOpen(false); }} 
+              className="block w-full text-left py-2 border-b border-stone-100 hover:text-[#C85A32]"
+            >
+              Accessories
+            </button>
+          </div>
+        )}
+      </header>
+
+      {}
+      <section className="relative h-[75vh] min-h-[500px] max-h-[800px] overflow-hidden bg-stone-900 text-white">
+        {HERO_SLIDES.map((slide, index) => (
+          <div
+            key={slide.id}
+            className={`absolute inset-0 transition-opacity duration-1000 ease-in-out ${
+              index === activeSlide ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+            }`}
+          >
+            <div className="absolute inset-0 bg-black/35 z-10" />
+            <img 
+              src={slide.image} 
+              alt={slide.title} 
+              className="w-full h-full object-cover object-center transform scale-105 transition-transform duration-10000"
+            />
+            <div className="absolute inset-0 z-20 flex items-center justify-center text-center px-4">
+              <div className="max-w-3xl mx-auto space-y-6">
+                <span className="inline-block px-3 py-1 bg-white/20 backdrop-blur-md text-xs tracking-widest uppercase rounded-sm border border-white/30">
+                  {slide.tag}
+                </span>
+                <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif tracking-tight leading-tight uppercase font-light">
+                  {slide.title}
+                </h1>
+                <p className="text-stone-200 text-base sm:text-lg max-w-xl mx-auto font-light">
+                  {slide.subtitle}
+                </p>
+                <div className="pt-4">
+                  <a 
+                    href="#catalog"
+                    className="inline-flex items-center space-x-3 bg-white text-[#1A1A1A] px-8 py-4 text-xs tracking-widest uppercase font-semibold hover:bg-[#C85A32] hover:text-white transition-all duration-300 shadow-xl"
+                  >
+                    <span>Shop Autumn Collection</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+
+        {/* Carousel controls */}
+        <button 
+          onClick={() => setActiveSlide((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1))}
+          className="absolute left-4 top-1/2 -translate-y-1/2 z-30 p-3 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-all"
+          aria-label="Previous slide"
+        >
+          <ChevronLeft className="w-6 h-6" />
+        </button>
+        <button 
+          onClick={() => setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length)}
+          className="absolute right-4 top-1/2 -translate-y-1/2 z-30 p-3 text-white/70 hover:text-white bg-black/20 hover:bg-black/40 rounded-full transition-all"
+          aria-label="Next slide"
+        >
+          <ChevronRight className="w-6 h-6" />
+        </button>
+
+        {/* Carousel Indicators */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-30 flex space-x-3">
+          {HERO_SLIDES.map((_, idx) => (
+            <button
+              key={idx}
+              onClick={() => setActiveSlide(idx)}
+              className={`h-1 transition-all duration-300 rounded-full ${
+                idx === activeSlide ? 'w-8 bg-white' : 'w-2 bg-white/40'
+              }`}
+              aria-label={`Go to slide ${idx + 1}`}
+            />
+          ))}
+        </div>
+      </section>
+
+      {}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12">
+          <div>
+            <span className="text-xs font-semibold uppercase tracking-widest text-[#C85A32]">Curated Aesthetics</span>
+            <h2 className="text-3xl sm:text-4xl font-serif text-[#1A1A1A] mt-2">Explore By Category</h2>
+          </div>
+          <p className="text-stone-500 max-w-md text-sm mt-4 md:mt-0 font-light">
+            Each collection is thoughtfully designed to bring structured elegance and tactile luxury to your daily rotation.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {CATEGORIES.map((cat) => (
+            <div 
+              key={cat.id}
+              onClick={() => {
+                if (cat.id === 'Streetwear' || cat.id === 'Minimalist Luxe') {
+                  setSelectedCategory('All');
+                } else {
+                  setSelectedCategory(cat.id);
+                }
+                const catalogEl = document.getElementById('catalog');
+                if (catalogEl) catalogEl.scrollIntoView({ behavior: 'smooth' });
+              }}
+              className="group relative h-96 rounded-lg overflow-hidden cursor-pointer bg-stone-200 shadow-md hover:shadow-xl transition-all duration-500"
+            >
+              <img 
+                src={cat.image} 
+                alt={cat.name} 
+                className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-700"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+              <div className="absolute bottom-6 left-6 right-6 text-white">
+                <span className="text-xs tracking-widest text-stone-300 uppercase">{cat.items}</span>
+                <h3 className="text-2xl font-serif font-light tracking-wide mt-1 group-hover:text-[#D7C4B7] transition-colors">
+                  {cat.name}
+                </h3>
+                <div className="mt-3 flex items-center space-x-2 text-xs uppercase tracking-widest text-white/80 group-hover:translate-x-1 transition-transform">
+                  <span>Explore</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {}
+      <section id="catalog" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 border-t border-stone-200">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-10">
+          <div>
+            <h2 className="text-3xl font-serif text-[#1A1A1A]">Autumn Catalog</h2>
+            <p className="text-stone-500 text-xs tracking-wider uppercase mt-1">
+              Showing {filteredProducts.length} of {PRODUCTS.length} products
+            </p>
+          </div>
+
+          {/* Controls toolbar */}
+          <div className="flex flex-wrap items-center gap-4">
+            {/* Gender Switch */}
+            <div className="flex bg-stone-100 p-1 rounded-md border border-stone-200 text-xs font-medium uppercase tracking-wider">
+              {['All', 'Women', 'Men'].map((g) => (
+                <button
+                  key={g}
+                  onClick={() => setSelectedGender(g)}
+                  className={`px-4 py-2 rounded transition-colors ${
+                    selectedGender === g ? 'bg-white text-[#1A1A1A] shadow-sm font-semibold' : 'text-stone-600 hover:text-black'
+                  }`}
+                >
+                  {g}
+                </button>
+              ))}
+            </div>
+
+            {/* Sort Dropdown */}
+            <div className="flex items-center space-x-2 bg-stone-100 px-3 py-2 rounded-md border border-stone-200 text-xs uppercase">
+              <SlidersHorizontal className="w-4 h-4 text-stone-500" />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="bg-transparent text-[#1A1A1A] font-medium focus:outline-none cursor-pointer"
+              >
+                <option value="featured">Sort: Featured</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+                <option value="newest">Newest First</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+          
+          {}
+          <aside className="lg:col-span-1 space-y-8 bg-stone-50/60 p-6 rounded-lg border border-stone-200/80 h-fit">
+            <div>
+              <h3 className="text-sm font-semibold uppercase tracking-widest text-[#1A1A1A] mb-4">Category</h3>
+              <div className="space-y-2">
+                {['All', 'Tops', 'Bottoms', 'Outerwear', 'Accessories'].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setSelectedCategory(cat)}
+                    className={`block w-full text-left py-1.5 px-3 rounded text-xs tracking-wider uppercase transition-all ${
+                      selectedCategory === cat 
+                        ? 'bg-[#1A1A1A] text-white font-semibold' 
+                        : 'text-stone-600 hover:bg-stone-200/60'
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div className="flex justify-between items-center mb-2">
+                <h3 className="text-sm font-semibold uppercase tracking-widest text-[#1A1A1A]">Max Price</h3>
+                <span className="text-xs font-mono font-bold text-[#C85A32]">${priceRange}</span>
+              </div>
+              <input
+                type="range"
+                min="100"
+                max="400"
+                step="10"
+                value={priceRange}
+                onChange={(e) => setPriceRange(Number(e.target.value))}
+                className="w-full accent-[#C85A32] cursor-pointer"
+              />
+              <div className="flex justify-between text-[10px] text-stone-400 font-mono mt-1">
+                <span>$100</span>
+                <span>$400</span>
+              </div>
+            </div>
+
+            <button
+              onClick={() => {
+                setSelectedCategory('All');
+                setSelectedGender('All');
+                setPriceRange(400);
+                setSortBy('featured');
+              }}
+              className="w-full py-2 border border-stone-300 text-stone-600 rounded text-xs uppercase tracking-widest hover:bg-stone-200 transition-colors"
+            >
+              Reset Filters
+            </button>
+          </aside>
+
+          {}
+          <main className="lg:col-span-3">
+            {filteredProducts.length === 0 ? (
+              <div className="text-center py-20 bg-stone-50 rounded-lg border border-stone-200">
+                <p className="text-stone-500 font-serif text-lg">No products match your active filters.</p>
+                <button
+                  onClick={() => { setSelectedCategory('All'); setSelectedGender('All'); setPriceRange(400); }}
+                  className="mt-4 px-6 py-2.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded"
+                >
+                  Clear Filters
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {filteredProducts.map((product) => (
+                  <div 
+                    key={product.id}
+                    className="group bg-white rounded-lg overflow-hidden border border-stone-200 hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+                  >
+                    <div>
+                      {/* Image container */}
+                      <div className="relative aspect-[3/4] overflow-hidden bg-stone-100 cursor-pointer" onClick={() => setSelectedProduct(product)}>
+                        <img
+                          src={product.images[0]}
+                          alt={product.name}
+                          className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                        />
+                        
+                        {/* Badge Label */}
+                        {product.badge && (
+                          <span className={`absolute top-3 left-3 text-[10px] uppercase font-bold tracking-widest px-2.5 py-1 text-white rounded-sm ${
+                            product.badge === 'Sale' ? 'bg-[#C85A32]' : product.badge === 'New' ? 'bg-emerald-700' : 'bg-[#1A1A1A]'
+                          }`}>
+                            {product.badge}
+                          </span>
+                        )}
+
+                        {/* Wishlist Button Overlay */}
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleWishlist(product);
+                          }}
+                          className="absolute top-3 right-3 p-2 bg-white/80 backdrop-blur-md rounded-full text-stone-700 hover:text-[#C85A32] shadow-md transition-all"
+                          aria-label="Wishlist"
+                        >
+                          <Heart className={`w-4 h-4 ${isWishlisted(product.id) ? 'fill-[#C85A32] text-[#C85A32]' : ''}`} />
+                        </button>
+
+                        {/* Quick View Hover Button */}
+                        <div className="absolute inset-x-4 bottom-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setSelectedProduct(product);
+                            }}
+                            className="w-full py-2.5 bg-white/90 backdrop-blur-md text-[#1A1A1A] text-xs uppercase tracking-widest font-semibold rounded shadow-md hover:bg-black hover:text-white transition-all flex items-center justify-center space-x-2"
+                          >
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>Quick View</span>
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Card Content */}
+                      <div className="p-4 space-y-2">
+                        <div className="flex justify-between items-start">
+                          <span className="text-[10px] uppercase tracking-widest text-stone-400 font-semibold">{product.category}</span>
+                          <div className="flex items-center space-x-1 text-xs">
+                            <Star className="w-3.5 h-3.5 text-amber-500 fill-amber-500" />
+                            <span className="font-semibold text-stone-700">{product.rating}</span>
+                          </div>
+                        </div>
+
+                        <h3 
+                          onClick={() => setSelectedProduct(product)}
+                          className="font-medium text-stone-900 text-sm hover:text-[#C85A32] transition-colors cursor-pointer line-clamp-1"
+                        >
+                          {product.name}
+                        </h3>
+
+                        {/* Price rendering */}
+                        <div className="flex items-center space-x-2 font-mono text-sm">
+                          <span className="font-bold text-[#1A1A1A]">${product.price}</span>
+                          {product.originalPrice && (
+                            <span className="text-stone-400 line-through text-xs">${product.originalPrice}</span>
+                          )}
+                        </div>
+
+                        {/* Color Swatch Preview */}
+                        <div className="flex items-center space-x-1.5 pt-1">
+                          {product.colors.map((c) => (
+                            <span
+                              key={c.name}
+                              title={c.name}
+                              className="w-3 h-3 rounded-full border border-stone-300"
+                              style={{ backgroundColor: c.hex }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Quick Add To Cart Button */}
+                    <div className="p-4 pt-0">
+                      <button
+                        onClick={() => addToCart(product)}
+                        className="w-full py-2.5 bg-stone-100 hover:bg-[#1A1A1A] hover:text-white text-[#1A1A1A] text-xs uppercase tracking-widest font-semibold rounded transition-colors duration-200 flex items-center justify-center space-x-2"
+                      >
+                        <ShoppingBag className="w-3.5 h-3.5" />
+                        <span>Add To Cart</span>
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </main>
+        </div>
+      </section>
+
+      {}
+      {selectedProduct && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
+          <div className="bg-[#FDFBF7] rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl relative border border-stone-200">
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedProduct(null)}
+              className="absolute top-4 right-4 z-10 p-2 text-stone-500 hover:text-black bg-stone-100 rounded-full transition-all"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6 sm:p-8">
+              {/* Image Gallery */}
+              <div className="space-y-4">
+                <div className="aspect-[3/4] bg-stone-100 rounded-lg overflow-hidden border border-stone-200">
+                  <img
+                    src={selectedProduct.images[0]}
+                    alt={selectedProduct.name}
+                    className="w-full h-full object-cover object-center"
+                  />
+                </div>
+                {selectedProduct.images.length > 1 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {selectedProduct.images.map((img, idx) => (
+                      <div key={idx} className="aspect-square bg-stone-100 rounded overflow-hidden border border-stone-200">
+                        <img src={img} alt="" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Product Info & Options */}
+              <div className="space-y-6 flex flex-col justify-between">
+                <div className="space-y-4">
+                  <span className="text-xs uppercase tracking-widest text-[#C85A32] font-semibold">{selectedProduct.category}</span>
+                  <h2 className="text-2xl sm:text-3xl font-serif text-[#1A1A1A]">{selectedProduct.name}</h2>
+                  
+                  <div className="flex items-center space-x-3">
+                    <span className="text-xl font-bold font-mono text-[#1A1A1A]">${selectedProduct.price}</span>
+                    {selectedProduct.originalPrice && (
+                      <span className="text-stone-400 line-through font-mono text-sm">${selectedProduct.originalPrice}</span>
+                    )}
+                    <div className="flex items-center space-x-1 pl-4 border-l border-stone-300 text-xs">
+                      <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
+                      <span className="font-bold text-stone-800">{selectedProduct.rating}</span>
+                      <span className="text-stone-500">({selectedProduct.reviewsCount} reviews)</span>
+                    </div>
+                  </div>
+
+                  <p className="text-stone-600 text-sm leading-relaxed font-light">
+                    {selectedProduct.description}
+                  </p>
+
+                  {/* Color Selector */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-2">
+                      Color: <span className="text-[#1A1A1A]">{selectedProduct.colors[0].name}</span>
+                    </label>
+                    <div className="flex space-x-3">
+                      {selectedProduct.colors.map((color) => (
+                        <button
+                          key={color.name}
+                          className="w-8 h-8 rounded-full border-2 border-stone-300 focus:ring-2 focus:ring-[#1A1A1A] p-0.5"
+                          style={{ backgroundColor: color.hex }}
+                          title={color.name}
+                        />
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Size Selector */}
+                  <div>
+                    <label className="block text-xs uppercase tracking-widest text-stone-500 font-semibold mb-2">
+                      Select Size
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {selectedProduct.sizes.map((size) => (
+                        <button
+                          key={size}
+                          className="px-4 py-2 border border-stone-300 rounded text-xs font-semibold hover:border-black hover:bg-stone-100 transition-colors uppercase"
+                        >
+                          {size}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Fabric & Care */}
+                  <div className="bg-stone-100 p-3.5 rounded text-xs space-y-1">
+                    <span className="font-semibold text-stone-800 block uppercase tracking-wider">Fabric & Care</span>
+                    <p className="text-stone-600">{selectedProduct.fabricCare}</p>
+                  </div>
+                </div>
+
+                {/* Add To Cart & Wishlist Actions */}
+                <div className="space-y-3 pt-4 border-t border-stone-200">
+                  <button
+                    onClick={() => {
+                      addToCart(selectedProduct);
+                      setSelectedProduct(null);
+                    }}
+                    className="w-full py-3.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest font-semibold rounded hover:bg-[#C85A32] transition-colors shadow-md flex items-center justify-center space-x-2"
+                  >
+                    <ShoppingBag className="w-4 h-4" />
+                    <span>Add To Bag</span>
+                  </button>
+
+                  <button
+                    onClick={() => toggleWishlist(selectedProduct)}
+                    className="w-full py-2.5 border border-stone-300 text-stone-700 text-xs uppercase tracking-widest font-semibold rounded hover:bg-stone-100 transition-colors flex items-center justify-center space-x-2"
+                  >
+                    <Heart className={`w-4 h-4 ${isWishlisted(selectedProduct.id) ? 'fill-[#C85A32] text-[#C85A32]' : ''}`} />
+                    <span>{isWishlisted(selectedProduct.id) ? 'Saved in Wishlist' : 'Add to Wishlist'}</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {}
+      {isCartOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity" onClick={() => setIsCartOpen(false)} />
+
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-[#FDFBF7] shadow-2xl flex flex-col justify-between border-l border-stone-200">
+              
+              {/* Drawer Header */}
+              <div className="p-6 border-b border-stone-200 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <ShoppingBag className="w-5 h-5 text-[#1A1A1A]" />
+                  <h2 className="text-lg font-serif uppercase tracking-wider">Shopping Bag ({cart.reduce((a, b) => a + b.quantity, 0)})</h2>
+                </div>
+                <button onClick={() => setIsCartOpen(false)} className="p-2 text-stone-400 hover:text-black">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Free Shipping Progress Bar */}
+              <div className="bg-stone-100 p-4 border-b border-stone-200 text-xs text-stone-700">
+                {cartSubtotal >= freeShippingThreshold ? (
+                  <p className="font-semibold text-emerald-700 flex items-center space-x-1">
+                    <Check className="w-4 h-4" />
+                    <span>You've unlocked FREE Express Shipping!</span>
+                  </p>
+                ) : (
+                  <div>
+                    <p className="mb-1.5">
+                      Add <span className="font-bold text-[#C85A32] font-mono">${freeShippingThreshold - cartSubtotal}</span> more for <span className="font-semibold">Free Express Shipping</span>
+                    </p>
+                    <div className="w-full bg-stone-200 h-1.5 rounded-full overflow-hidden">
+                      <div 
+                        className="bg-[#C85A32] h-full transition-all duration-300"
+                        style={{ width: `${Math.min(100, (cartSubtotal / freeShippingThreshold) * 100)}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Cart Items List */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-6 divide-y divide-stone-200">
+                {cart.length === 0 ? (
+                  <div className="text-center py-20 space-y-4">
+                    <ShoppingBag className="w-12 h-12 text-stone-300 mx-auto" />
+                    <p className="text-stone-500 font-serif">Your shopping bag is empty.</p>
+                    <button 
+                      onClick={() => setIsCartOpen(false)} 
+                      className="px-6 py-2.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded"
+                    >
+                      Start Shopping
+                    </button>
+                  </div>
+                ) : (
+                  cart.map((item) => (
+                    <div key={item.cartItemId} className="pt-4 first:pt-0 flex space-x-4">
+                      <img src={item.images[0]} alt={item.name} className="w-20 h-24 object-cover rounded border border-stone-200" />
+                      
+                      <div className="flex-1 flex flex-col justify-between">
+                        <div>
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-sm font-medium text-stone-900 line-clamp-1">{item.name}</h4>
+                            <button 
+                              onClick={() => removeFromCart(item.cartItemId)}
+                              className="text-stone-400 hover:text-red-600 transition-colors"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                          <p className="text-xs text-stone-500 mt-0.5">
+                            Color: {item.selectedColor} | Size: {item.selectedSize}
+                          </p>
+                          <span className="font-mono text-xs font-bold text-stone-900 mt-1 block">
+                            ${item.price}
+                          </span>
+                        </div>
+
+                        {/* Quantity Controls */}
+                        <div className="flex items-center space-x-3">
+                          <div className="flex items-center border border-stone-300 rounded bg-stone-50">
+                            <button 
+                              onClick={() => updateCartQuantity(item.cartItemId, -1)}
+                              className="p-1 hover:bg-stone-200 text-stone-600"
+                            >
+                              <Minus className="w-3 h-3" />
+                            </button>
+                            <span className="px-2 text-xs font-mono font-bold">{item.quantity}</span>
+                            <button 
+                              onClick={() => updateCartQuantity(item.cartItemId, 1)}
+                              className="p-1 hover:bg-stone-200 text-stone-600"
+                            >
+                              <Plus className="w-3 h-3" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Drawer Footer with Summary & Checkout */}
+              {cart.length > 0 && (
+                <div className="p-6 border-t border-stone-200 bg-stone-50 space-y-4">
+                  {/* Promo Code Input */}
+                  <form onSubmit={handleApplyPromo} className="flex space-x-2">
+                    <input
+                      type="text"
+                      placeholder="Promo Code (AURA10)"
+                      value={promoCode}
+                      onChange={(e) => setPromoCode(e.target.value)}
+                      className="flex-1 px-3 py-2 border border-stone-300 rounded text-xs uppercase focus:outline-none focus:border-black bg-white"
+                    />
+                    <button type="submit" className="px-4 py-2 bg-stone-200 hover:bg-stone-300 text-xs font-semibold uppercase rounded">
+                      Apply
+                    </button>
+                  </form>
+                  {promoError && <p className="text-[10px] text-red-600 font-medium">{promoError}</p>}
+                  {promoSuccess && <p className="text-[10px] text-emerald-600 font-medium">{promoSuccess}</p>}
+
+                  {/* Calculations */}
+                  <div className="space-y-2 text-xs text-stone-600 font-mono">
+                    <div className="flex justify-between">
+                      <span>Subtotal</span>
+                      <span>${cartSubtotal.toFixed(2)}</span>
+                    </div>
+                    {discountAmount > 0 && (
+                      <div className="flex justify-between text-emerald-600">
+                        <span>Discount ({discountPercent}%)</span>
+                        <span>-${discountAmount.toFixed(2)}</span>
+                      </div>
+                    )}
+                    <div className="flex justify-between">
+                      <span>Estimated Shipping</span>
+                      <span>{shippingCost === 0 ? 'FREE' : `$${shippingCost.toFixed(2)}`}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Estimated Tax</span>
+                      <span>${estimatedTax.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between text-sm font-bold text-black border-t border-stone-200 pt-2">
+                      <span>Total</span>
+                      <span>${grandTotal.toFixed(2)}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => {
+                      setIsCartOpen(false);
+                      setIsCheckoutOpen(true);
+                    }}
+                    className="w-full py-3.5 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest font-semibold rounded hover:bg-[#C85A32] transition-colors flex items-center justify-center space-x-2 shadow-lg"
+                  >
+                    <Lock className="w-4 h-4" />
+                    <span>Proceed To Checkout</span>
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {}
+      {isWishlistOpen && (
+        <div className="fixed inset-0 z-50 overflow-hidden">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-xs transition-opacity" onClick={() => setIsWishlistOpen(false)} />
+          <div className="fixed inset-y-0 right-0 max-w-full flex pl-10">
+            <div className="w-screen max-w-md bg-[#FDFBF7] shadow-2xl flex flex-col justify-between border-l border-stone-200">
+              
+              <div className="p-6 border-b border-stone-200 flex items-center justify-between">
+                <div className="flex items-center space-x-2">
+                  <Heart className="w-5 h-5 text-[#C85A32]" />
+                  <h2 className="text-lg font-serif uppercase tracking-wider">Your Wishlist ({wishlist.length})</h2>
+                </div>
+                <button onClick={() => setIsWishlistOpen(false)} className="p-2 text-stone-400 hover:text-black">
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {wishlist.length === 0 ? (
+                  <div className="text-center py-20 space-y-4">
+                    <Heart className="w-12 h-12 text-stone-300 mx-auto" />
+                    <p className="text-stone-500 font-serif">No saved items in your wishlist.</p>
+                  </div>
+                ) : (
+                  wishlist.map((item) => (
+                    <div key={item.id} className="flex items-center space-x-4 p-3 bg-white rounded-lg border border-stone-200">
+                      <img src={item.images[0]} alt={item.name} className="w-16 h-20 object-cover rounded" />
+                      <div className="flex-1">
+                        <h4 className="text-xs font-semibold text-stone-900 line-clamp-1">{item.name}</h4>
+                        <span className="text-xs font-mono font-bold text-stone-800">${item.price}</span>
+                        <div className="mt-2 flex space-x-2">
+                          <button
+                            onClick={() => {
+                              addToCart(item);
+                              toggleWishlist(item);
+                            }}
+                            className="px-3 py-1 bg-[#1A1A1A] text-white text-[10px] uppercase tracking-wider rounded"
+                          >
+                            Move to Bag
+                          </button>
+                          <button
+                            onClick={() => toggleWishlist(item)}
+                            className="px-2 py-1 text-stone-400 hover:text-red-600 text-[10px]"
+                          >
+                            Remove
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {}
+      {isSearchOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md flex items-start justify-center pt-20 px-4">
+          <div className="bg-[#FDFBF7] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-6 relative border border-stone-200">
+            <button 
+              onClick={() => setIsSearchOpen(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-black"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div className="relative">
+              <Search className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
+              <input
+                type="text"
+                placeholder="Search coats, silk blouses, accessories..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                autoFocus
+                className="w-full pl-12 pr-4 py-3.5 bg-stone-100 border border-stone-200 rounded-lg text-sm focus:outline-none focus:border-black font-medium"
+              />
+            </div>
+
+            {/* Suggestions or Results */}
+            {searchQuery.trim() ? (
+              <div className="max-h-80 overflow-y-auto space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-widest text-stone-400">
+                  Search Results ({searchResults.length})
+                </p>
+                {searchResults.length === 0 ? (
+                  <p className="text-stone-500 text-sm py-4">No matching items found for "{searchQuery}".</p>
+                ) : (
+                  searchResults.map((item) => (
+                    <div
+                      key={item.id}
+                      onClick={() => {
+                        setSelectedProduct(item);
+                        setIsSearchOpen(false);
+                      }}
+                      className="flex items-center space-x-4 p-2 hover:bg-stone-100 rounded cursor-pointer transition-colors"
+                    >
+                      <img src={item.images[0]} alt={item.name} className="w-12 h-14 object-cover rounded" />
+                      <div>
+                        <h4 className="text-sm font-medium text-stone-900">{item.name}</h4>
+                        <span className="text-xs font-mono font-bold text-stone-600">${item.price}</span>
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <span className="text-xs font-semibold uppercase tracking-widest text-stone-400">Popular Searches</span>
+                <div className="flex flex-wrap gap-2">
+                  {['Wool Coat', 'Silk Blouse', 'Trousers', 'Leather Bag'].map((term) => (
+                    <button
+                      key={term}
+                      onClick={() => setSearchQuery(term)}
+                      className="px-3 py-1 bg-stone-100 hover:bg-stone-200 text-xs text-stone-700 rounded-full transition-colors"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {}
+      {isCheckoutOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#FDFBF7] rounded-xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl relative border border-stone-200 max-h-[90vh] overflow-y-auto">
+            <button
+              onClick={() => setIsCheckoutOpen(false)}
+              className="absolute top-4 right-4 text-stone-400 hover:text-black"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            {orderComplete ? (
+              <div className="text-center py-12 space-y-4">
+                <div className="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto">
+                  <Check className="w-8 h-8" />
+                </div>
+                <h3 className="text-2xl font-serif text-[#1A1A1A]">Order Confirmed!</h3>
+                <p className="text-stone-600 text-sm max-w-md mx-auto">
+                  Thank you for shopping with AURA Studio. Order confirmation #AURA-{Math.floor(100000 + Math.random() * 900000)} has been sent to your email.
+                </p>
+                <button
+                  onClick={() => {
+                    setCart([]);
+                    setIsCheckoutOpen(false);
+                    setOrderComplete(false);
+                  }}
+                  className="mt-4 px-8 py-3 bg-[#1A1A1A] text-white text-xs uppercase tracking-widest rounded"
+                >
+                  Continue Shopping
+                </button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                <div className="border-b border-stone-200 pb-4">
+                  <h3 className="text-xl font-serif uppercase tracking-wider">Express Checkout</h3>
+                  <div className="flex space-x-4 mt-2 text-xs font-semibold uppercase tracking-wider">
+                    <span className={checkoutStep === 'shipping' ? 'text-[#C85A32]' : 'text-stone-400'}>1. Shipping</span>
+                    <span>&rarr;</span>
+                    <span className={checkoutStep === 'payment' ? 'text-[#C85A32]' : 'text-stone-400'}>2. Payment</span>
+                  </div>
+                </div>
+
+                {checkoutStep === 'shipping' ? (
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      setCheckoutStep('payment');
+                    }}
+                    className="space-y-4 text-xs"
+                  >
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-stone-600 mb-1">First Name</label>
+                        <input required type="text" defaultValue="Elena" className="w-full p-2.5 border border-stone-300 rounded bg-white" />
+                      </div>
+                      <div>
+                        <label className="block text-stone-600 mb-1">Last Name</label>
+                        <input required type="text" defaultValue="Rostova" className="w-full p-2.5 border border-stone-300 rounded bg-white" />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="block text-stone-600 mb-1">Shipping Address</label>
+                      <input required type="text" defaultValue="742 Evergreen Terrace" className="w-full p-2.5 border border-stone-300 rounded bg-white" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-stone-600 mb-1">City</label>
+                        <input required type="text" defaultValue="New York" className="w-full p-2.5 border border-stone-300 rounded bg-white" />
+                      </div>
+                      <div>
+                        <label className="block text-stone-600 mb-1">Postal Code</label>
+                        <input required type="text" defaultValue="10001" className="w-full p-2.5 border border-stone-300 rounded bg-white" />
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      className="w-full py-3.5 bg-[#1A1A1A] text-white uppercase tracking-widest font-semibold rounded hover:bg-[#C85A32] transition-colors mt-4"
+                    >
+                      Continue To Payment (${grandTotal.toFixed(2)})
+                    </button>
+                  </form>
+                ) : (
+                  <form 
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      setOrderComplete(true);
+                    }}
+                    className="space-y-4 text-xs"
+                  >
+                    <div>
+                      <label className="block text-stone-600 mb-1">Card Number</label>
+                      <input required type="text" placeholder="•••• •••• •••• 4242" defaultValue="4242 4242 4242 4242" className="w-full p-2.5 border border-stone-300 rounded bg-white font-mono" />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-stone-600 mb-1">Expiry Date</label>
+                        <input required type="text" placeholder="MM/YY" defaultValue="12/28" className="w-full p-2.5 border border-stone-300 rounded bg-white font-mono" />
+                      </div>
+                      <div>
+                        <label className="block text-stone-600 mb-1">CVV</label>
+                        <input required type="text" placeholder="123" defaultValue="888" className="w-full p-2.5 border border-stone-300 rounded bg-white font-mono" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-2 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setCheckoutStep('shipping')}
+                        className="px-4 py-3 border border-stone-300 uppercase font-semibold text-stone-600 rounded"
+                      >
+                        Back
+                      </button>
+                      <button
+                        type="submit"
+                        className="flex-1 py-3.5 bg-[#C85A32] text-white uppercase tracking-widest font-semibold rounded hover:bg-[#1A1A1A] transition-colors"
+                      >
+                        Complete Order (${grandTotal.toFixed(2)})
+                      </button>
+                    </div>
+                  </form>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {}
+      <section className="border-t border-stone-200 bg-stone-100/60 py-12">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+          <div className="flex flex-col items-center space-y-2">
+            <Truck className="w-6 h-6 text-[#C85A32]" />
+            <h4 className="text-xs uppercase font-semibold tracking-widest text-[#1A1A1A]">Complimentary Shipping</h4>
+            <p className="text-stone-500 text-xs font-light max-w-xs">Free express delivery on all orders exceeding $250 threshold worldwide.</p>
+          </div>
+          <div className="flex flex-col items-center space-y-2">
+            <RotateCcw className="w-6 h-6 text-[#C85A32]" />
+            <h4 className="text-xs uppercase font-semibold tracking-widest text-[#1A1A1A]">30-Day Effortless Returns</h4>
+            <p className="text-stone-500 text-xs font-light max-w-xs">Pre-paid return shipping labels included with every order package.</p>
+          </div>
+          <div className="flex flex-col items-center space-y-2">
+            <ShieldCheck className="w-6 h-6 text-[#C85A32]" />
+            <h4 className="text-xs uppercase font-semibold tracking-widest text-[#1A1A1A]">Ethical Craftsmanship</h4>
+            <p className="text-stone-500 text-xs font-light max-w-xs">Sustainably sourced natural materials and fair-wage European atelier partners.</p>
+          </div>
+        </div>
+      </section>
+
+      {}
+      <footer className="bg-[#1A1A1A] text-white pt-16 pb-12 border-t border-stone-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-stone-800">
+          
+          {/* Brand info */}
+          <div className="space-y-4">
+            <a href="#" className="text-2xl font-serif tracking-widest uppercase font-extrabold text-white">
+              AURA<span className="font-light text-[#C85A32] ml-1">STUDIO</span>
+            </a>
+            <p className="text-stone-400 text-xs leading-relaxed font-light">
+              Architectural silhouettes, premium organic fabrics, and luxury essentials designed to endure.
+            </p>
+            <div className="flex space-x-4 text-stone-400 pt-2">
+              <a href="#" className="hover:text-white transition-colors"><Instagram className="w-4 h-4" /></a>
+              <a href="#" className="hover:text-white transition-colors"><Facebook className="w-4 h-4" /></a>
+              <a href="#" className="hover:text-white transition-colors"><Twitter className="w-4 h-4" /></a>
+            </div>
+          </div>
+
+          {/* Quick links */}
+          <div>
+            <h5 className="text-xs uppercase font-semibold tracking-widest text-white mb-4">Explore</h5>
+            <ul className="space-y-2.5 text-xs text-stone-400 font-light">
+              <li><a href="#catalog" className="hover:text-white transition-colors">Autumn Collection</a></li>
+              <li><a href="#catalog" className="hover:text-white transition-colors">Silk & Tailoring</a></li>
+              <li><a href="#catalog" className="hover:text-white transition-colors">Heavyweight Hoodies</a></li>
+              <li><a href="#catalog" className="hover:text-white transition-colors">Italian Leather Goods</a></li>
+            </ul>
+          </div>
+
+          {/* Customer Care */}
+          <div>
+            <h5 className="text-xs uppercase font-semibold tracking-widest text-white mb-4">Customer Care</h5>
+            <ul className="space-y-2.5 text-xs text-stone-400 font-light">
+              <li><a href="#" className="hover:text-white transition-colors">Shipping & Delivery</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Returns & Exchanges</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Garment Care Guide</a></li>
+              <li><a href="#" className="hover:text-white transition-colors">Contact Atelier</a></li>
+            </ul>
+          </div>
+
+          {/* Newsletter */}
+          <div className="space-y-4">
+            <h5 className="text-xs uppercase font-semibold tracking-widest text-white">Subscribe To AURA Journal</h5>
+            <p className="text-stone-400 text-xs font-light">
+              Receive early access to seasonal drops, exclusive invitations, and private archive sales.
+            </p>
+            <form onSubmit={(e) => { e.preventDefault(); showNotification("Thank you for subscribing to AURA Journal."); }} className="flex">
+              <input
+                type="email"
+                placeholder="Enter email address"
+                required
+                className="bg-stone-800 text-white text-xs px-3 py-2.5 rounded-l focus:outline-none border border-stone-700 w-full"
+              />
+              <button
+                type="submit"
+                className="bg-[#C85A32] hover:bg-white hover:text-black text-white px-4 py-2.5 text-xs font-semibold uppercase rounded-r transition-colors"
+              >
+                Join
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 flex flex-col sm:flex-row justify-between items-center text-stone-500 text-[11px]">
+          <p>© {new Date().getFullYear()} AURA Studio Inc. All rights reserved.</p>
+          <div className="flex space-x-6 mt-4 sm:mt-0">
+            <a href="#" className="hover:text-stone-300">Privacy Policy</a>
+            <a href="#" className="hover:text-stone-300">Terms of Service</a>
+            <a href="#" className="hover:text-stone-300">Accessibility</a>
+          </div>
+        </div>
+      </footer>
+    </div>
+  );
+}
